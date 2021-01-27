@@ -88,8 +88,8 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
       "name" -> nonEmptyText.verifying(maxLength(250), validateName)
       , "kafkaVersion" -> nonEmptyText.verifying(validateKafkaVersion)
       , "zkHosts" -> nonEmptyText.verifying(validateZkHosts)
-      , "kafkaZkRoot" -> optional(text)
       , "zkMaxRetry" -> ignored(100 : Int)
+      , "kafkaZkRoot" -> optional(text)
       , "jmxEnabled" -> boolean
       , "jmxUser" -> optional(text)
       , "jmxPass" -> optional(text)
@@ -133,8 +133,8 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
       "name" -> nonEmptyText.verifying(maxLength(250), validateName),
       "kafkaVersion" -> nonEmptyText.verifying(validateKafkaVersion),
       "zkHosts" -> nonEmptyText.verifying(validateZkHosts),
-      "kafkaZkRoot" -> optional(text),
       "zkMaxRetry" -> ignored(100 : Int),
+      "kafkaZkRoot" -> optional(text),
       "jmxEnabled" -> boolean,
       "jmxUser" -> optional(text),
       "jmxPass" -> optional(text),
@@ -228,8 +228,8 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
             cc.name,
             cc.version.toString,
             cc.curatorConfig.zkConnect,
-            cc.kafkaZkRoot,
             cc.curatorConfig.zkMaxRetry,
+            cc.kafkaZkRoot,
             cc.jmxEnabled,
             cc.jmxUser,
             cc.jmxPass,
