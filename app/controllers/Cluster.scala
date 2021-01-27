@@ -178,6 +178,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
       ,CuratorConfig("")
       ,false
       ,KafkaVersion.supportedVersions.values.toList.sortBy(_.toString).last
+      ,None
       ,false
       ,None
       ,None
