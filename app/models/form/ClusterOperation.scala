@@ -34,7 +34,7 @@ object ClusterOperation {
             , name: String
             , version: String
             , zkHosts: String
-            , kafkaZkRoot: String
+            , kafkaZkRoot: Option[String]
             , zkMaxRetry: Int
             , jmxEnabled: Boolean
             , jmxUser: Option[String]
@@ -54,7 +54,7 @@ object ClusterOperation {
       pollConsumers, filterConsumers, logkafkaEnabled, activeOffsetCacheEnabled, displaySizeEnabled, tuning, securityProtocol, saslMechanism, jaasConfig))
   }
 
-  def customUnapply(co: ClusterOperation) : Option[(String, String, String, String, String, Int, Boolean, Option[String], Option[String], Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Option[ClusterTuning], String, Option[String], Option[String])] = {
+  def customUnapply(co: ClusterOperation) : Option[(String, String, String, String, Option[String], Int, Boolean, Option[String], Option[String], Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Option[ClusterTuning], String, Option[String], Option[String])] = {
     Option((co.op.toString, co.clusterConfig.name, co.clusterConfig.version.toString,
             co.clusterConfig.curatorConfig.zkConnect, co.clusterConfig.kafkaZkRoot, co.clusterConfig.curatorConfig.zkMaxRetry,
             co.clusterConfig.jmxEnabled, co.clusterConfig.jmxUser, co.clusterConfig.jmxPass, co.clusterConfig.jmxSsl,
