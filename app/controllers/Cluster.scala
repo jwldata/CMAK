@@ -88,6 +88,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
       "name" -> nonEmptyText.verifying(maxLength(250), validateName)
       , "kafkaVersion" -> nonEmptyText.verifying(validateKafkaVersion)
       , "zkHosts" -> nonEmptyText.verifying(validateZkHosts)
+      , "kafkaZkRoot" -> optional(text)
       , "zkMaxRetry" -> ignored(100 : Int)
       , "jmxEnabled" -> boolean
       , "jmxUser" -> optional(text)
@@ -132,6 +133,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
       "name" -> nonEmptyText.verifying(maxLength(250), validateName),
       "kafkaVersion" -> nonEmptyText.verifying(validateKafkaVersion),
       "zkHosts" -> nonEmptyText.verifying(validateZkHosts),
+      "kafkaZkRoot" -> optional(text),
       "zkMaxRetry" -> ignored(100 : Int),
       "jmxEnabled" -> boolean,
       "jmxUser" -> optional(text),
@@ -225,6 +227,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
             cc.name,
             cc.version.toString,
             cc.curatorConfig.zkConnect,
+            cc.kafkaZkRoot,
             cc.curatorConfig.zkMaxRetry,
             cc.jmxEnabled,
             cc.jmxUser,
@@ -254,6 +257,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
           kafkaManager.addCluster(clusterConfig.name,
             clusterConfig.version.toString,
             clusterConfig.curatorConfig.zkConnect,
+            clusterConfig.kafkaZkRoot,
             clusterConfig.jmxEnabled,
             clusterConfig.jmxUser,
             clusterConfig.jmxPass,
@@ -325,6 +329,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
               clusterOperation.clusterConfig.name,
               clusterOperation.clusterConfig.version.toString,
               clusterOperation.clusterConfig.curatorConfig.zkConnect,
+              clusterOperation.clusterConfig.kafkaZkRoot,
               clusterOperation.clusterConfig.jmxEnabled,
               clusterOperation.clusterConfig.jmxUser,
               clusterOperation.clusterConfig.jmxPass,
