@@ -226,6 +226,7 @@ object ClusterConfig {
             , version : String
             , zkHosts: String
             , zkMaxRetry: Int = 10
+            , kafkaZkRoot: Option[String]
             , jmxEnabled: Boolean
             , jmxUser: Option[String]
             , jmxPass: Option[String]
@@ -251,6 +252,7 @@ object ClusterConfig {
       , CuratorConfig(cleanZkHosts, zkMaxRetry)
       , true
       , kafkaVersion
+      , kafkaZkRoot
       , jmxEnabled
       , jmxUser
       , jmxPass
@@ -268,10 +270,10 @@ object ClusterConfig {
   }
 
   def customUnapply(cc: ClusterConfig) : Option[(
-    String, String, String, Int, Boolean, Option[String], Option[String], Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Option[ClusterTuning], String, Option[String], Option[String])] = {
+    String, String, String, Int, Option[String], Boolean, Option[String], Option[String], Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Option[ClusterTuning], String, Option[String], Option[String])] = {
     Some((
       cc.name, cc.version.toString, cc.curatorConfig.zkConnect, cc.curatorConfig.zkMaxRetry,
-      cc.jmxEnabled, cc.jmxUser, cc.jmxPass, cc.jmxSsl, cc.pollConsumers, cc.filterConsumers,
+      cc.kafkaZkRoot, cc.jmxEnabled, cc.jmxUser, cc.jmxPass, cc.jmxSsl, cc.pollConsumers, cc.filterConsumers,
       cc.logkafkaEnabled, cc.activeOffsetCacheEnabled, cc.displaySizeEnabled, cc.tuning, cc.securityProtocol.stringId, cc.saslMechanism.map(_.stringId), cc.jaasConfig
       )
     )
@@ -305,6 +307,7 @@ object ClusterConfig {
       :: ("curatorConfig" -> toJSON(config.curatorConfig))
       :: ("enabled" -> toJSON(config.enabled))
       :: ("kafkaVersion" -> toJSON(config.version.toString))
+      :: ("kafkaZkRoot" -> toJSON(config.kafkaZkRoot))
       :: ("jmxEnabled" -> toJSON(config.jmxEnabled))
       :: ("jmxUser" -> toJSON(config.jmxUser))
       :: ("jmxPass" -> toJSON(config.jmxPass))
@@ -331,6 +334,7 @@ object ClusterConfig {
         (name:String,curatorConfig:CuratorConfig,enabled:Boolean) =>
           val versionString = fieldExtended[String]("kafkaVersion")(json)
           val version = versionString.map(KafkaVersion.apply).getOrElse(Kafka_0_8_1_1)
+          val kafkaZkRoot = fieldExtended[Option[String]]("kafkaZkRoot")(json)
           val jmxEnabled = fieldExtended[Boolean]("jmxEnabled")(json)
           val jmxUser = fieldExtended[Option[String]]("jmxUser")(json)
           val jmxPass = fieldExtended[Option[String]]("jmxPass")(json)
@@ -351,6 +355,7 @@ object ClusterConfig {
             name,
             curatorConfig,
             enabled,version,
+            kafkaZkRoot.getOrElse(None),
             jmxEnabled.getOrElse(false),
             jmxUser.getOrElse(None),
             jmxPass.getOrElse(None),
@@ -483,6 +488,7 @@ case class ClusterConfig (name: String
                           , curatorConfig : CuratorConfig
                           , enabled: Boolean
                           , version: KafkaVersion
+                          , kafkaZkRoot: Option[String]
                           , jmxEnabled: Boolean
                           , jmxUser: Option[String]
                           , jmxPass: Option[String]
