@@ -24,6 +24,7 @@ import org.apache.kafka.common.TopicPartition
 import org.apache.zookeeper.CreateMode
 import org.apache.zookeeper.KeeperException.{NoNodeException, NodeExistsException}
 import org.apache.zookeeper.data.Stat
+import kafka.manager.model.{ClusterConfig}
 
 /**
  * Borrowed from kafka 0.8.1.1.  Adapted to use curator framework.
@@ -31,17 +32,22 @@ import org.apache.zookeeper.data.Stat
  */
 object ZkUtils {
 
-  val ConsumersPath = "/consumers"
-  val BrokerIdsPath = "/brokers/ids"
-  val BrokerTopicsPath = "/brokers/topics"
-  val TopicConfigPath = "/config/topics"
-  val TopicConfigChangesPath = "/config/changes"
-  val ControllerPath = "/controller"
-  val ControllerEpochPath = "/controller_epoch"
-  val ReassignPartitionsPath = "/admin/reassign_partitions"
-  val DeleteTopicsPath = "/admin/delete_topics"
-  val PreferredReplicaLeaderElectionPath = "/admin/preferred_replica_election"
-  val AdminPath = "/admin"
+  def getKafkaZkRoot(currentConfig: ClusterConfig): String = {
+    val kafkaZkRoot = currentConfig.kafkaZkRoot
+  }
+  val kafkaZkRoot = getKafkaZkRoot(currentConfig: ClusterConfig)
+
+  val ConsumersPath = kafkaZkRoot + "/consumers"
+  val BrokerIdsPath = kafkaZkRoot + "/brokers/ids"
+  val BrokerTopicsPath = kafkaZkRoot + "/brokers/topics"
+  val TopicConfigPath = kafkaZkRoot + "/config/topics"
+  val TopicConfigChangesPath = kafkaZkRoot + "/config/changes"
+  val ControllerPath = kafkaZkRoot + "/controller"
+  val ControllerEpochPath = kafkaZkRoot + "/controller_epoch"
+  val ReassignPartitionsPath = kafkaZkRoot + "/admin/reassign_partitions"
+  val DeleteTopicsPath = kafkaZkRoot + "/admin/delete_topics"
+  val PreferredReplicaLeaderElectionPath = kafkaZkRoot + "/admin/preferred_replica_election"
+  val AdminPath = kafkaZkRoot + "/admin"
   val SchedulePreferredLeaderElectionPath = AdminPath + "/schedule_leader_election"
 
   def getTopicPath(topic: String): String = {
